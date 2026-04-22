@@ -2,6 +2,6 @@ services:
   - type: web
     name: bookscan
     env: node
-    rootDir: 북
+    rootDir: app
     buildCommand: npm install
     startCommand: npm start
