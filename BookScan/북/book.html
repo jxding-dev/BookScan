@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>BookScan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <section class="screen active" id="screen-home" aria-label="홈">
+      <div class="home-logo">
+        <span class="home-logo-text">BookScan</span>
+        <div class="home-logo-dot"></div>
+      </div>
+
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            id="home-search-input"
+            class="search-input"
+            placeholder="책 내용을 검색해 보세요"
+            aria-label="전체 검색"
+            readonly
+          >
+        </div>
+      </div>
+
+      <div class="folder-tabs" id="home-folder-tabs"></div>
+
+      <div class="section-label">태그 필터</div>
+      <div class="tag-strip" id="home-tag-strip"></div>
+
+      <div id="recent-activity-section" style="display:none">
+        <div class="section-label">최근 본 항목</div>
+        <div class="recent-activity-list" id="home-recent-activity"></div>
+      </div>
+
+      <div class="section-label">전체 책장</div>
+      <div class="book-list" id="home-book-list"></div>
+    </section>
+
+    <section class="screen" id="screen-search" aria-label="검색">
+      <div class="screen-header">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="내용, 키워드를 검색해보세요"
+            aria-label="검색어 입력"
+            autofocus
+          >
+          <button class="search-clear" id="search-clear-btn" type="button" aria-label="검색어 지우기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="search-meta" id="search-meta"></div>
+      <div class="search-hint">검색하면 최근 검색어가 여기에 쌓여 다시 바로 열 수 있습니다.</div>
+      <div class="search-support" id="search-support">
+        <div class="search-support-label">최근 검색어</div>
+        <div class="recent-searches search-recent-searches" id="search-recent-searches"></div>
+      </div>
+      <div class="search-results-list" id="search-results-container"></div>
+    </section>
+
+    <section class="screen" id="screen-book-detail" aria-label="책 상세">
+      <div class="screen-header">
+        <button class="back-btn" title="뒤로" type="button" aria-label="뒤로 가기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="m15 18-6-6 6-6"></path>
+          </svg>
+        </button>
+        <span class="screen-title" id="book-detail-title"></span>
+        <button class="book-detail-search-btn" id="book-detail-search-toggle" type="button" title="책 내부 검색" aria-label="책 내부 검색">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+        <button class="book-detail-reorder-btn" id="book-detail-reorder-toggle" type="button" title="페이지 순서 변경" aria-label="페이지 순서 변경">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 10H3"></path>
+            <path d="M21 6H3"></path>
+            <path d="M21 14H3"></path>
+            <path d="M21 18H3"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="book-detail-header">
+        <div class="book-detail-author" id="book-detail-author"></div>
+        <div class="book-detail-tags" id="book-detail-tags"></div>
+      </div>
+
+      <div class="book-inline-search" id="book-inline-search" style="display:none">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            type="text"
+            id="book-search-input"
+            class="search-input"
+            placeholder="이 책 안에서 검색"
+            aria-label="책 내부 검색어 입력"
+          >
+          <button class="search-clear" id="book-search-clear-btn" type="button" aria-label="책 검색어 지우기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="book-search-results" id="book-search-results"></div>
+      </div>
+
+      <div class="page-list" id="page-list"></div>
+    </section>
+
+    <section class="screen" id="screen-highlights" aria-label="하이라이트">
+      <div class="screen-header">
+        <span class="screen-title">하이라이트</span>
+      </div>
+
+      <div class="highlight-filter-bar">
+        <button class="color-filter-btn all active" data-color="all" type="button">전체</button>
+        <button class="color-filter-btn" data-color="yellow" type="button" aria-label="노랑"></button>
+        <button class="color-filter-btn" data-color="blue" type="button" aria-label="파랑"></button>
+        <button class="color-filter-btn" data-color="red" type="button" aria-label="빨강"></button>
+        <button class="color-filter-btn" data-color="green" type="button" aria-label="초록"></button>
+      </div>
+
+      <div id="highlights-container"></div>
+    </section>
+
+    <nav id="bottom-nav" aria-label="하단 메뉴">
+      <button class="nav-btn active" data-screen="home" type="button" aria-label="홈">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        홈
+      </button>
+
+      <button class="nav-btn" data-screen="search" type="button" aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        검색
+      </button>
+
+      <button class="nav-btn nav-scan" data-screen="scan" type="button" aria-label="페이지 추가">
+        <div class="nav-scan-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"></path>
+            <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+          </svg>
+        </div>
+        페이지 추가
+      </button>
+
+      <button class="nav-btn" data-screen="highlights" type="button" aria-label="하이라이트">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        하이라이트
+      </button>
+    </nav>
+
+    <div id="selection-popup" role="dialog" aria-modal="true" aria-label="하이라이트 색상 선택">
+      <div class="selection-colors">
+        <button class="hl-color-btn" data-color="yellow" type="button" aria-label="노랑 하이라이트" title="노랑 하이라이트"></button>
+        <button class="hl-color-btn" data-color="blue" type="button" aria-label="파랑 하이라이트" title="파랑 하이라이트"></button>
+        <button class="hl-color-btn" data-color="red" type="button" aria-label="빨강 하이라이트" title="빨강 하이라이트"></button>
+        <button class="hl-color-btn" data-color="green" type="button" aria-label="초록 하이라이트" title="초록 하이라이트"></button>
+      </div>
+      <div class="selection-memo-wrap">
+        <label for="selection-memo-input" class="sr-only">메모</label>
+        <textarea id="selection-memo-input" class="selection-memo-input" placeholder="메모를 입력하세요 (선택)"></textarea>
+        <div class="selection-popup-actions">
+          <button id="selection-cancel-btn" class="btn btn-secondary" type="button">취소</button>
+          <button id="selection-save-btn" class="btn btn-primary" type="button">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-scan" role="dialog" aria-modal="true" aria-labelledby="modal-scan-title">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+
+          <button class="modal-close" id="scan-modal-close-btn" type="button" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <div class="modal-title" id="modal-scan-title">새 페이지 추가</div>
+
+          <div class="field-label">책 제목 *</div>
+          <input type="text" id="scan-book-title" class="field-input" placeholder="책 제목을 입력해주세요">
+
+          <div class="field-label">저자 (선택)</div>
+          <input type="text" id="scan-book-author" class="field-input" placeholder="저자 이름을 입력해주세요">
+
+          <div class="field-help">이미지는 선택 사항이며, 페이지 텍스트는 아래에 직접 입력합니다.</div>
+
+          <div class="scan-options">
+            <label class="scan-option-card" for="scan-image-input">
+              <div class="scan-option-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </div>
+              <div class="scan-option-text">
+                <div class="scan-option-title">이미지 첨부 (선택)</div>
+                <div class="scan-option-desc">참고용 페이지 이미지를 추가할 수 있습니다.</div>
+              </div>
+            </label>
+            <input id="scan-image-input" type="file" accept="image/*" hidden>
+          </div>
+
+          <div id="scan-preview-wrap" style="display:none">
+            <div class="field-label">첨부한 이미지</div>
+            <img id="scan-preview-img" src="" alt="미리보기">
+          </div>
+
+          <div class="field-label">페이지 텍스트 입력 *</div>
+          <textarea class="entry-textarea" id="page-entry-text" placeholder="페이지 텍스트를 직접 입력해주세요"></textarea>
+
+          <div id="scan-save-choice-wrap" style="display:none">
+            <div class="field-label" style="margin-top:var(--space-md)">저장 방식 선택</div>
+            <div id="scan-save-choice-list"></div>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="scan-save-btn" type="button" style="margin-top:var(--space-md)">저장하기</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-edit-book" role="dialog" aria-modal="true" aria-labelledby="modal-edit-book-title">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+
+          <button class="modal-close" id="edit-book-close-btn" type="button" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <div class="modal-title" id="modal-edit-book-title">책 정보 수정</div>
+
+          <input type="hidden" id="edit-book-id">
+
+          <div class="field-label">책 제목 *</div>
+          <input type="text" id="edit-book-title" class="field-input" placeholder="책 제목">
+
+          <div class="field-label">저자</div>
+          <input type="text" id="edit-book-author" class="field-input" placeholder="저자명">
+
+          <div class="field-label">태그</div>
+          <div id="edit-book-tags" class="edit-check-grid"></div>
+
+          <div class="field-label" style="margin-top:var(--space-md)">폴더</div>
+          <div id="edit-book-folders" class="edit-radio-list"></div>
+
+          <button class="btn btn-primary btn-full" id="edit-book-save-btn" type="button">저장하기</button>
+          <button class="btn btn-danger btn-full" id="edit-book-delete-btn" type="button">책 삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-edit-page" role="dialog" aria-modal="true" aria-labelledby="modal-edit-page-title">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+
+          <button class="modal-close" id="edit-page-close-btn" type="button" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <div class="modal-title" id="modal-edit-page-title">페이지 텍스트 수정</div>
+
+          <input type="hidden" id="edit-page-id">
+
+          <div class="field-label">페이지 내용</div>
+          <textarea id="edit-page-text" class="entry-textarea" placeholder="페이지 텍스트를 수정해주세요"></textarea>
+
+          <button class="btn btn-primary btn-full" id="edit-page-save-btn" type="button">저장하기</button>
+          <button class="btn btn-danger btn-full" id="edit-page-delete-btn" type="button">페이지 삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-edit-highlight" role="dialog" aria-modal="true" aria-labelledby="modal-edit-highlight-title">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+
+          <button class="modal-close" id="edit-highlight-close-btn" type="button" aria-label="닫기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12"></path>
+            </svg>
+          </button>
+
+          <div class="modal-title" id="modal-edit-highlight-title">하이라이트 수정</div>
+
+          <input type="hidden" id="edit-highlight-id">
+
+          <div class="field-label">색상</div>
+          <div class="edit-highlight-colors">
+            <button class="edit-highlight-color-btn" data-color="yellow" type="button" aria-label="노랑"></button>
+            <button class="edit-highlight-color-btn" data-color="blue" type="button" aria-label="파랑"></button>
+            <button class="edit-highlight-color-btn" data-color="red" type="button" aria-label="빨강"></button>
+            <button class="edit-highlight-color-btn" data-color="green" type="button" aria-label="초록"></button>
+          </div>
+
+          <div class="field-label" style="margin-top:var(--space-md)">메모</div>
+          <textarea id="edit-highlight-memo" class="entry-textarea" placeholder="메모를 입력하세요 (선택)"></textarea>
+
+          <button class="btn btn-primary btn-full" id="edit-highlight-save-btn" type="button">저장하기</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="db.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
