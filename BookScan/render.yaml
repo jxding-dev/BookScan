@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: bookscan
-    env: node
-    rootDir: 북
-    buildCommand: npm install
-    startCommand: npm start
