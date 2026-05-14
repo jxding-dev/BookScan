@@ -1,0 +1,12 @@
+{
+  "name": "bookscan-root",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Render entrypoint for the BookScan app",
+  "scripts": {
+    "start": "node ./북/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
