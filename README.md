@@ -56,7 +56,15 @@ http://localhost:3000
 
 ## 배포
 
-Render 같은 Node 실행 환경에서는 `BookScan/server.js`를 실행 엔트리로 사용합니다.
+Render 배포 설정은 루트의 `render.yaml`을 사용합니다.
+
+```yaml
+rootDir: BookScan
+buildCommand: npm install
+startCommand: npm start
+```
+
+Node 실행 환경에서 직접 지정할 경우에는 `BookScan/server.js`를 실행 엔트리로 사용합니다.
 
 ```bash
 node BookScan/server.js
